@@ -1,0 +1,44 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package bantrabalhofinal.controller;
+
+import bantrabalhofinal.model.Album;
+import bantrabalhofinal.model.Musica;
+import bantrabalhofinal.persistance.AlbumDAO;
+import bantrabalhofinal.persistance.Conexao;
+import bantrabalhofinal.persistance.MusicaDAO;
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ *
+ * @author udesc
+ */
+public class AppMusica {
+    private final MusicaDAO musicaDAO;
+    private final AlbumDAO albumDAO;
+    
+    public AppMusica() throws SQLException{
+        Conexao conexao = new Conexao();
+        musicaDAO = new MusicaDAO(conexao);
+        albumDAO = new AlbumDAO(conexao);
+    }
+    
+    public void cadastrarMusica(Musica musica) throws SQLException{
+        this.musicaDAO.insert(musica);
+    }
+    
+    public List<Musica> consultarMusicas() throws SQLException {
+        return this.musicaDAO.selectAll();
+    }
+    
+    public void cadastrarAlbum(Album album) throws SQLException {
+        this.albumDAO.insert(album);
+    }
+    
+    public List<Album> consultarAlbuns() throws SQLException {
+        return this.albumDAO.selectAll();
+    }
+}

@@ -4,6 +4,9 @@
  */
 package bantrabalhofinal.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author udesc
@@ -17,6 +20,14 @@ public class Musica {
 
     public Musica(int id) {
         this.id = id;
+    }
+    
+    public Musica (ResultSet resultSet) throws SQLException {
+        this(resultSet.getInt("id"));
+        this.titulo = resultSet.getString("titulo");
+        this.qntVistos = resultSet.getInt("qntVistos");
+        this.letra = resultSet.getString("letra");
+        this.idPublicador = resultSet.getInt("idpublicador");
     }
 
     public int getId() {

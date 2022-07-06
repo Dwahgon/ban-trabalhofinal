@@ -4,6 +4,8 @@
  */
 package bantrabalhofinal.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,12 +19,18 @@ public class Album {
     private String nome;
     private Date dataLancamento;
     private float precoDisco;
-    private List<Musica> musicas;
-    private Publicador publicador;
+    private int idPublicador;
 
     public Album(int id) {
         this.id = id;
-        this.musicas = new ArrayList<>();
+    }
+    
+    public Album(ResultSet resultSet) throws SQLException{
+        this(resultSet.getInt("id"));
+        this.nome = resultSet.getString("nome");
+        this.dataLancamento = resultSet.getDate("datalancamento");
+        this.precoDisco = resultSet.getFloat("precodisco");
+        this.idPublicador = resultSet.getInt("idpublicador");
     }
 
     public String getNome() {
@@ -48,39 +56,22 @@ public class Album {
     public void setPrecoDisco(float precoDisco) {
         this.precoDisco = precoDisco;
     }
-    
-    public void addMusica(Musica musica){
-        if (!this.musicas.contains(musica))
-            this.musicas.add(musica);
-    }
-    
-    public void removeMusica(Musica musica){
-        this.musicas.remove(musica);
-    }
-
-    public List<Musica> getMusicas() {
-        return musicas;
-    }
-
-    public void setMusicas(List<Musica> musicas) {
-        this.musicas = musicas;
-    }
 
     public int getId() {
         return id;
     }
 
-    public Publicador getPublicador() {
-        return publicador;
+    public int getIdPublicador() {
+        return idPublicador;
     }
 
-    public void setPublicador(Publicador publicador) {
-        this.publicador = publicador;
+    public void setIdPublicador(int idPublicador) {
+        this.idPublicador = idPublicador;
     }
 
     @Override
     public String toString() {
-        return "Album{" + "id=" + id + ", nome=" + nome + ", dataLancamento=" + dataLancamento + ", precoDisco=" + precoDisco + ", musicas=" + musicas + ", publicador=" + publicador + '}';
+        return "Album{" + "id=" + id + ", nome=" + nome + ", dataLancamento=" + dataLancamento + ", precoDisco=" + precoDisco + ", idPublicador=" + idPublicador + '}';
     }
 
     @Override

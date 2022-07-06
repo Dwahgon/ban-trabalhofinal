@@ -5,14 +5,11 @@
 package bantrabalhofinal.persistance;
 
 import bantrabalhofinal.model.Musica;
-import bantrabalhofinal.model.Publicador;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class MusicaDAO {
 
-    private static final String SQL_SELECT_ALL = "select * from musicas m";
+    private static final String SQL_SELECT_ALL = "select * from musicas";
     private static final String SQL_SELECT = "select * from musicas where id=?";
     private static final String SQL_INSERT = "insert into musicas(titulo,qntVistos,letra,idpublicador) values(?,?,?,?)";
     private static final String SQL_UPDATE = "update table musicas set titulo=?, qntVistos=?, letra=?, idpublicador=? where id=?";
@@ -41,7 +38,7 @@ public class MusicaDAO {
         List<Musica> musicas = new ArrayList<>();
         ResultSet resultSet = this.selectAll.executeQuery();
         while (resultSet.next())
-            musicas.add(resultSetToMusica(resultSet));
+            musicas.add(new Musica(resultSet));
         return musicas;
     }
     
@@ -49,7 +46,7 @@ public class MusicaDAO {
         this.select.setInt(0, id);
         ResultSet resultSet = this.select.executeQuery();
         if (resultSet.next())
-            return this.resultSetToMusica(resultSet);
+            return new Musica(resultSet);
         return null;
     }
     
@@ -68,14 +65,5 @@ public class MusicaDAO {
         this.update.setInt(4, musica.getIdPublicador());
         this.update.setInt(5, musica.getId());
         this.update.execute();
-    }
-    
-    private Musica resultSetToMusica(ResultSet resultSet) throws SQLException{        
-        Musica musica = new Musica(resultSet.getInt("musicas.id"));
-        musica.setTitulo(resultSet.getString("titulo"));
-        musica.setQntVistos(resultSet.getInt("qntVistos"));
-        musica.setLetra(resultSet.getString("letra"));
-        musica.setIdPublicador(resultSet.getInt("idpublicador"));
-        return musica;
     }
 }
