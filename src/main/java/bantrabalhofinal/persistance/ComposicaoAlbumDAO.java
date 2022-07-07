@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ComposicaoAlbumDAO {
 
-    private static final String SQL_SELECT_JOIN = "select idalbum,nome,datalancamento,a.idpublicador as aidpublicador,precodisco,idmusica,titulo,qntvistos,letra,m.idpublicador as midpublicador,ordem from albuns a inner join composicoesalbum ca on a.id=ca.idalbum inner join musicas m on ca.idmusica=m.id order by a.id,ordem";
+    private static final String SQL_SELECT_JOIN = "select a.id as idalbum,nome,datalancamento,a.idpublicador as aidpublicador,precodisco,m.id as idmusica,titulo,qntvistos,letra,m.idpublicador as midpublicador,ordem from albuns a left join composicoesalbum ca on a.id=ca.idalbum left join musicas m on ca.idmusica=m.id order by a.id,ordem";
     private static final String SQL_INSERT = "insert into composicoesalbum(idalbum,idmusica,ordem) values (?,?,?)";
 
     private final PreparedStatement selectJoin;
@@ -53,6 +53,9 @@ public class ComposicaoAlbumDAO {
             }
 
             Musica musica = new Musica(rs.getInt("idmusica"));
+            if (rs.wasNull()) {
+                continue;
+            }
             musica.setTitulo(rs.getString("titulo"));
             musica.setQntVistos(rs.getInt("qntvistos"));
             musica.setLetra(rs.getString("letra"));

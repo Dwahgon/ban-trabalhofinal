@@ -29,6 +29,8 @@ public class BanTrabalhofinal {
     private static final int OPCAO_LISTAR_ALBUNS = 4;
     private static final int OPCAO_ADD_MUSICA_ALBUM = 5;
     private static final int OPCAO_LISTAR_CONTEUDO_ALBUNS = 6;
+    private static final int OPCAO_LISTAR_MAIS_CARO = 7;
+    private static final int OPCAO_SAIR = 8;
 
     private static AppMusica appMusica;
     private static Scanner scanner;
@@ -74,7 +76,14 @@ public class BanTrabalhofinal {
                     case OPCAO_LISTAR_CONTEUDO_ALBUNS:
                         consultarMusicasDeAlbum();
                         break;
-
+                    case OPCAO_LISTAR_MAIS_CARO:
+                        consultarMusicaMaisCara();
+                        break;
+                    case OPCAO_SAIR:
+                        break loop;
+                    default:
+                        System.out.println("Entrada inválida");
+                        break;
                 }
             } catch (NumberFormatException ex) {
                 System.out.println("Entrada inválida");
@@ -95,9 +104,12 @@ public class BanTrabalhofinal {
         System.out.println(OPCAO_LISTAR_ALBUNS + ") Listar albuns");
         System.out.println(OPCAO_ADD_MUSICA_ALBUM + ") Adicionar música à album");
         System.out.println(OPCAO_LISTAR_CONTEUDO_ALBUNS + ") Listar conteúdo albuns");
+        System.out.println(OPCAO_LISTAR_MAIS_CARO + ") Listar albuns mais caros");
+        System.out.println(OPCAO_SAIR + ") Sair");
     }
 
     private static void cadastrarMusica() throws SQLException {
+        System.out.println("Cadastrando música:");
         Musica musica = promptMusica();
         appMusica.cadastrarMusica(musica);
     }
@@ -116,6 +128,7 @@ public class BanTrabalhofinal {
     }
 
     private static void consultarMusicas() throws SQLException {
+        System.out.println("Músicas:");
         List<Musica> musicas = appMusica.consultarMusicas();
         musicas.forEach((musica) -> {
             System.out.println(musica);
@@ -123,8 +136,56 @@ public class BanTrabalhofinal {
     }
 
     private static void cadastrarAlbum() throws ParseException, SQLException {
+        System.out.println("Cadastrando album:");
         Album album = promptAlbum();
         appMusica.cadastrarAlbum(album);
+    }
+
+    private static void consultarAlbuns() throws SQLException {
+        System.out.println("Albuns:");
+        List<Album> albuns = appMusica.consultarAlbuns();
+        albuns.forEach((album) -> {
+            System.out.println(album);
+        });
+    }
+
+    private static void consultarMusicasDeAlbum() throws SQLException {
+        System.out.println("Albuns e suas músicas:");
+        List<Album> albuns = appMusica.consultarComposicoesAlbuns();
+        for (Album album : albuns) {
+            System.out.println(album);
+            for (Map.Entry<Integer, Musica> entrada : album.getMusicas().entrySet()) {
+                System.out.println("\t" + entrada.getKey() + ": " + entrada.getValue());
+            }
+        }
+    }
+
+    private static void addMusicaAlbum() throws SQLException {
+        System.out.println("Adicionando músicas à albuns");
+        Album album = promptSelecionarObjeto(appMusica.consultarAlbuns());
+        if (album == null) {
+            System.out.println("Não há albuns cadastrados");
+            return;
+
+        }
+        Musica musica = promptSelecionarObjeto(appMusica.consultarMusicas());
+        if (musica == null) {
+            System.out.println("Não há músicas cadastrados");
+            return;
+        }
+        System.out.print("Ordem: ");
+        int ordem = Integer.valueOf(scanner.nextLine());
+        appMusica.adicionarMusicaAlbum(album, musica, ordem);
+    }
+
+    private static void consultarMusicaMaisCara() throws SQLException {
+        Album album;
+        System.out.println("Album mais caro:");
+        if ((album = appMusica.consultarAlbumMaisCaro()) != null) {
+            System.out.println(album);
+            return;
+        }
+        System.out.println("Nenhum album encontrado");
     }
 
     private static Album promptAlbum() throws ParseException {
@@ -141,79 +202,25 @@ public class BanTrabalhofinal {
         return album;
     }
 
-    private static Album promptSelecionarAlbum() throws SQLException {
-        List<Album> albuns = appMusica.consultarAlbuns();
-        int i = 1;
-        for (Album album : albuns) {
-            System.out.println("(" + i + ") " + album);
-            i++;
-        }
-
-        int numAlbumSelecionado;
-        do {
-            System.out.print("Digite o número da álbum: ");
-            numAlbumSelecionado = Integer.valueOf(scanner.nextLine());
-            if (numAlbumSelecionado > 0 && numAlbumSelecionado <= albuns.size()) {
-                return albuns.get(numAlbumSelecionado - 1);
-            }
-            System.out.println("O número deve estar entre 1 e " + albuns.size());
-        } while (true);
-    }
-
-    private static Musica promptSelecionarMusica() throws SQLException {
-        List<Musica> musicas = appMusica.consultarMusicas();
-
-        if (musicas.size() == 0) {
+    private static <T> T promptSelecionarObjeto(List<T> options) {
+        if (options.isEmpty()) {
             return null;
         }
 
         int i = 1;
-        for (Musica musica : musicas) {
-            System.out.println("(" + i + ") " + musica);
+        for (T option : options) {
+            System.out.println("(" + i + ") " + option);
             i++;
         }
 
-        int numMusicaSelecionado;
+        int optionNum;
         do {
-            System.out.print("Digite o número da música: ");
-            numMusicaSelecionado = Integer.valueOf(scanner.nextLine());
-            if (numMusicaSelecionado > 0 && numMusicaSelecionado <= musicas.size()) {
-                return musicas.get(numMusicaSelecionado - 1);
+            System.out.println("Digite a opção que deseja selecionar: ");
+            optionNum = Integer.valueOf(scanner.nextLine());
+            if (optionNum > 0 && optionNum <= options.size()) {
+                return options.get(optionNum - 1);
             }
-            System.out.println("O número deve estar entre 1 e " + musicas.size());
+            System.out.println("O número deve estar entre 1 e " + options.size());
         } while (true);
-    }
-
-    private static void consultarAlbuns() throws SQLException {
-        List<Album> albuns = appMusica.consultarAlbuns();
-        albuns.forEach((album) -> {
-            System.out.println(album);
-        });
-    }
-
-    private static void consultarMusicasDeAlbum() throws SQLException {
-        List<Album> albuns = appMusica.consultarComposicoesAlbuns();
-        for (Album album : albuns) {
-            System.out.println(album);
-            for (Map.Entry<Integer, Musica> entrada : album.getMusicas().entrySet()) {
-                System.out.println("\t" + entrada.getKey() + ": " + entrada.getValue());
-            }
-        }
-    }
-
-    private static void addMusicaAlbum() throws SQLException {
-        Album album = promptSelecionarAlbum();
-        if (album == null) {
-            System.out.println("Não há albuns cadastrados");
-            return;
-        }
-        Musica musica = promptSelecionarMusica();
-        if (musica == null) {
-            System.out.println("Não há músicas cadastrados");
-            return;
-        }
-        System.out.print("Ordem: ");
-        int ordem = Integer.valueOf(scanner.nextLine());
-        appMusica.adicionarMusicaAlbum(album, musica, ordem);
     }
 }

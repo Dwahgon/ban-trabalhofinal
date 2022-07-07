@@ -26,41 +26,43 @@ public class MusicaDAO {
     private final PreparedStatement select;
     private final PreparedStatement insert;
     private final PreparedStatement update;
-    
+
     public MusicaDAO(Conexao conexao) throws SQLException {
         this.selectAll = conexao.getConnection().prepareStatement(SQL_SELECT_ALL);
         this.select = conexao.getConnection().prepareStatement(SQL_SELECT);
         this.insert = conexao.getConnection().prepareStatement(SQL_INSERT);
         this.update = conexao.getConnection().prepareStatement(SQL_UPDATE);
     }
-    
-    public List<Musica> selectAll() throws SQLException{
+
+    public List<Musica> selectAll() throws SQLException {
         List<Musica> musicas = new ArrayList<>();
         ResultSet resultSet = this.selectAll.executeQuery();
-        while (resultSet.next())
+        while (resultSet.next()) {
             musicas.add(new Musica(resultSet));
+        }
         return musicas;
     }
-    
-    public Musica select(int id) throws SQLException{
+
+    public Musica select(int id) throws SQLException {
         this.select.setInt(0, id);
         ResultSet resultSet = this.select.executeQuery();
-        if (resultSet.next())
+        if (resultSet.next()) {
             return new Musica(resultSet);
+        }
         return null;
     }
-    
+
     public void insert(Musica musica) throws SQLException {
         this.insert.setString(1, musica.getTitulo());
-        this.insert.setInt(2,0);
+        this.insert.setInt(2, 0);
         this.insert.setString(3, musica.getLetra());
         this.insert.setInt(4, musica.getIdPublicador());
         this.insert.execute();
     }
-    
+
     public void update(Musica musica) throws SQLException {
         this.update.setString(1, musica.getTitulo());
-        this.update.setInt(2,0);
+        this.update.setInt(2, 0);
         this.update.setString(3, musica.getLetra());
         this.update.setInt(4, musica.getIdPublicador());
         this.update.setInt(5, musica.getId());

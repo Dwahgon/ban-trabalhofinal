@@ -52,4 +52,8 @@ public class AppMusica {
     public List<Album> consultarComposicoesAlbuns() throws SQLException {
         return this.composicaoAlbumDAO.selectJoin();
     }
+
+    public Album consultarAlbumMaisCaro() throws SQLException {
+        return this.albumDAO.selectMostExpensive();
+    }
 }
