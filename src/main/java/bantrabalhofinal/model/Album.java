@@ -6,26 +6,30 @@ package bantrabalhofinal.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  *
  * @author udesc
  */
 public class Album {
+
     private final int id;
     private String nome;
     private Date dataLancamento;
     private float precoDisco;
     private int idPublicador;
+    private SortedMap<Integer, Musica> musicas;
 
     public Album(int id) {
         this.id = id;
+        musicas = new TreeMap<>();
     }
-    
-    public Album(ResultSet resultSet) throws SQLException{
+
+    public Album(ResultSet resultSet) throws SQLException {
         this(resultSet.getInt("id"));
         this.nome = resultSet.getString("nome");
         this.dataLancamento = resultSet.getDate("datalancamento");
@@ -67,6 +71,14 @@ public class Album {
 
     public void setIdPublicador(int idPublicador) {
         this.idPublicador = idPublicador;
+    }
+
+    public Map<Integer, Musica> getMusicas() {
+        return musicas;
+    }
+
+    public void addMusica(int ordem, Musica musica) {
+        this.musicas.put(ordem, musica);
     }
 
     @Override

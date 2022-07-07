@@ -1,7 +1,5 @@
-bantrabalhofinal/model/Publicador.class
-bantrabalhofinal/persistance/Conexao.class
 bantrabalhofinal/model/Album.class
-bantrabalhofinal/model/Conta.class
+bantrabalhofinal/persistance/AlbumDAO.class
+bantrabalhofinal/persistance/Conexao.class
 bantrabalhofinal/model/Musica.class
-bantrabalhofinal/BanTrabalhofinal.class
 bantrabalhofinal/persistance/MusicaDAO.class

@@ -11,17 +11,17 @@ import java.util.logging.Logger;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author rebeca
  */
 public class Conexao {
+
     private Connection con;
-    
+
     public Conexao() {
         String driver = "org.postgresql.Driver";
-        String user = "postgres";
+        String user = "udesc";
         String senha = "udesc";
         String url = "jdbc:postgresql://localhost:5432/appmusica";
 
@@ -31,14 +31,14 @@ public class Conexao {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
-        }  
+        }
     }
-    
+
     public Connection getConnection() {
         return con;
     }
-    
-    public void closeConnection(){
+
+    public void closeConnection() {
         try {
             this.con.close();
         } catch (SQLException ex) {
