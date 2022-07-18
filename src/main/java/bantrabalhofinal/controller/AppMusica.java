@@ -53,7 +53,7 @@ public class AppMusica {
         return this.composicaoAlbumDAO.selectJoin();
     }
 
-    public Album consultarAlbumMaisCaro() throws SQLException {
+    public List<Album> consultarAlbumMaisCaro() throws SQLException {
         return this.albumDAO.selectMostExpensive();
     }
 }

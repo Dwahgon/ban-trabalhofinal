@@ -179,13 +179,17 @@ public class BanTrabalhofinal {
     }
 
     private static void consultarMusicaMaisCara() throws SQLException {
-        Album album;
-        System.out.println("Album mais caro:");
-        if ((album = appMusica.consultarAlbumMaisCaro()) != null) {
-            System.out.println(album);
+        List<Album> albuns = appMusica.consultarAlbumMaisCaro();
+        if (albuns.isEmpty()){
+            System.out.println("Nenhum album encontrado");
             return;
         }
-        System.out.println("Nenhum album encontrado");
+        
+        System.out.println("Albuns mais caros:");
+        for (Album album : albuns){
+            System.out.println(album);
+        }
+        
     }
 
     private static Album promptAlbum() throws ParseException {

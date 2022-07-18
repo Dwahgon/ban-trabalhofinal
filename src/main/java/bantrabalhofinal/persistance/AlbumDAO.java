@@ -19,7 +19,7 @@ import java.util.List;
 public class AlbumDAO {
 
     private static final String SQL_SELECT_ALL = "select * from albuns";
-    private static final String SQL_SELECT_MOST_EXPENSIVE = "select * from albuns where precodisco=any(select max(precodisco) from albuns) order by id limit 1";
+    private static final String SQL_SELECT_MOST_EXPENSIVE = "select * from albuns where precodisco=any(select max(precodisco) from albuns) order by id";
     private static final String SQL_INSERT = "insert into albuns(nome,datalancamento,idpublicador,precodisco) values (?,?,?,?)";
 
     private final PreparedStatement selectAll;
@@ -49,12 +49,13 @@ public class AlbumDAO {
         insert.execute();
     }
 
-    public Album selectMostExpensive() throws SQLException {
-        ResultSet rs = selectMostExpensive.executeQuery();
-        if (rs.next()) {
-            return new Album(rs);
+    public List<Album> selectMostExpensive() throws SQLException {
+        List<Album> albuns = new ArrayList<>();
+        ResultSet resultSet = selectMostExpensive.executeQuery();
+        while (resultSet.next()) {
+            albuns.add(new Album(resultSet));
         }
-        return null;
+        return albuns;
     }
 
 }
